@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PET Reading Test 1 - Part 3</title>
+
+<style>
+body{
+    font-family: Arial;
+    background: linear-gradient(135deg,#74ebd5,#acb6e5);
+    margin:0;
+}
+.container{
+    max-width:900px;
+    margin:20px auto;
+    background:white;
+    padding:20px;
+    border-radius:12px;
+}
+h2{text-align:center}
+
+input{
+    width:100%;
+    padding:10px;
+    margin-bottom:10px;
+}
+
+button{
+    padding:10px 15px;
+    background:#3498db;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+button:hover{background:#2980b9}
+
+.hidden{display:none}
+
+.question{
+    margin-bottom:15px;
+    border-bottom:1px solid #ddd;
+    padding-bottom:8px;
+}
+
+.correct{color:green}
+.wrong{color:red}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+th,td{
+    border:1px solid #ccc;
+    padding:8px;
+    text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="start">
+<h2>PET Reading Test 1 - Part 3</h2>
+<input id="name" placeholder="Họ tên">
+<input id="class" placeholder="Lớp">
+<button onclick="startQuiz()">Bắt đầu</button>
+</div>
+
+<div class="container hidden" id="quizBox">
+<h2>Làm bài</h2>
+<div id="quiz"></div>
+<button onclick="submitQuiz()">Nộp bài</button>
+</div>
+
+<div class="container hidden" id="resultBox">
+<h2>Kết quả</h2>
+<div id="result"></div>
+<button onclick="location.reload()">Làm lại</button>
+<button onclick="clearData()">Xóa bảng</button>
+
+<h3>Bảng tổng hợp</h3>
+<table>
+<thead>
+<tr>
+<th>STT</th><th>Họ tên</th><th>Lớp</th><th>Đúng</th><th>Điểm</th><th>Thời gian</th>
+</tr>
+</thead>
+<tbody id="table"></tbody>
+</table>
+</div>
+
+<script>
+const words = [
+"headmaster","artist","sculpture","free of charge","look forward to","arrival",
+"metal","university","drawing","bicycle","sculpture","lion","popular","realistic",
+"pupil","giraffe","tall","local","noticed","perfect","letter","cost","deliver",
+"retired","took up","keen","succeed","uncomfortable","instead","attract",
+"passers-by","feel","actual","hold","expression","proper"
+];
+
+const meanings = [
+"hiệu trưởng","nghệ sĩ","tượng điêu khắc","miễn phí","mong chờ","sự đến nơi",
+"kim loại","trường đại học","bức vẽ","xe đạp","tượng điêu khắc","sư tử","phổ biến",
+"thực tế","học sinh","hươu cao cổ","cao","địa phương","nhận thấy","hoàn hảo",
+"lá thư","chi phí","giao hàng","đã nghỉ hưu","bắt đầu làm","ham thích",
+"thành công","khó chịu","thay vào đó","thu hút","người qua đường","cảm thấy",
+"thực tế","tổ chức","biểu cảm","đúng đắn"
+];
+
+let html="";
+words.forEach((w,i)=>{
+    let correct=meanings[i];
+    let options=[correct];
+
+    while(options.length<4){
+        let rand=meanings[Math.floor(Math.random()*meanings.length)];
+        if(!options.includes(rand)) options.push(rand);
+    }
+
+    options.sort(()=>Math.random()-0.5);
+
+    html+=`<div class="question">
+    <b>${i+1}. ${w}</b><br>
+    ${options.map(o=>`<label><input type="radio" name="q${i}" value="${o}"> ${o}</label><br>`).join("")}
+    </div>`;
+});
+
+document.getElementById("quiz").innerHTML=html;
+
+function startQuiz(){
+    if(!name.value||!class.value){
+        alert("Vui lòng nhập đầy đủ thông tin!");
+        return;
+    }
+    start.classList.add("hidden");
+    quizBox.classList.remove("hidden");
+}
+
+function submitQuiz(){
+    let correct=0,output="";
+    words.forEach((w,i)=>{
+        let sel=document.querySelector(`input[name=q${i}]:checked`);
+        let val=sel?sel.value:"";
+
+        if(val===meanings[i]){
+            correct++;
+            output+=`<p class="correct">${i+1}. Đúng</p>`;
+        }else{
+            output+=`<p class="wrong">${i+1}. Sai (Đáp án: ${meanings[i]})</p>`;
+        }
+    });
+
+    let score=(correct/words.length*10).toFixed(2);
+
+    result.innerHTML=`
+    <h3>Đúng: ${correct}/${words.length}</h3>
+    <h3>Điểm: ${score}</h3>
+    ${output}
+    `;
+
+    save(correct,score);
+
+    quizBox.classList.add("hidden");
+    resultBox.classList.remove("hidden");
+
+    load();
+}
+
+function save(c,s){
+    let data=JSON.parse(localStorage.getItem("pet3")||"[]");
+    data.push({
+        name:name.value,
+        class:class.value,
+        c,
+        s,
+        time:new Date().toLocaleString()
+    });
+    localStorage.setItem("pet3",JSON.stringify(data));
+}
+
+function load(){
+    let data=JSON.parse(localStorage.getItem("pet3")||"[]");
+    table.innerHTML=data.map((d,i)=>`
+    <tr>
+    <td>${i+1}</td>
+    <td>${d.name}</td>
+    <td>${d.class}</td>
+    <td>${d.c}</td>
+    <td>${d.s}</td>
+    <td>${d.time}</td>
+    </tr>
+    `).join("");
+}
+
+function clearData(){
+    localStorage.removeItem("pet3");
+    load();
+}
+</script>
+
+</body>
+</html>
