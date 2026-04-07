@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PET Reading Test 1 - Part 3</title>
+<title>PET Reading Test 1 - Part 4</title>
 
 <style>
 body{
     font-family: Arial;
-    background: linear-gradient(135deg,#74ebd5,#acb6e5);
+    background: linear-gradient(135deg,#f6d365,#fda085);
     margin:0;
 }
 .container{
@@ -28,13 +28,13 @@ input{
 
 button{
     padding:10px 15px;
-    background:#3498db;
+    background:#e74c3c;
     color:white;
     border:none;
     border-radius:6px;
     cursor:pointer;
 }
-button:hover{background:#2980b9}
+button:hover{background:#c0392b}
 
 .hidden{display:none}
 
@@ -63,7 +63,7 @@ th,td{
 <body>
 
 <div class="container" id="start">
-<h2>PET Reading Test 1 - Part 3</h2>
+<h2>PET Reading Test 1 - Part 4</h2>
 <input id="name" placeholder="Họ tên">
 <input id="class" placeholder="Lớp">
 <button onclick="startQuiz()">Bắt đầu</button>
@@ -94,20 +94,19 @@ th,td{
 
 <script>
 const words = [
-"headmaster","artist","sculpture","free of charge","look forward to","arrival",
-"metal","university","drawing","bicycle","sculpture","lion","popular","realistic",
-"pupil","giraffe","tall","local","noticed","perfect","letter","cost","deliver",
-"retired","took up","keen","succeed","uncomfortable","instead","attract",
-"passers-by","feel","actual","hold","expression","proper"
+"cycling","spring","busy","countryside","average","speed","record","get fit",
+"healthy","fresh air","route","enjoy","flat","traffic-free","sunshine",
+"quite cold","warm up","brakes","terrible","excuse","mechanic","village",
+"friendly","serve","boring","rugby","corridor","tired","nearly","cheerful",
+"simple","fun","active","cheap","choice"
 ];
 
 const meanings = [
-"hiệu trưởng","nghệ sĩ","tượng điêu khắc","miễn phí","mong chờ","sự đến nơi",
-"kim loại","trường đại học","bức vẽ","xe đạp","tượng điêu khắc","sư tử","phổ biến",
-"thực tế","học sinh","hươu cao cổ","cao","địa phương","nhận thấy","hoàn hảo",
-"lá thư","chi phí","giao hàng","đã nghỉ hưu","bắt đầu làm","ham thích",
-"thành công","khó chịu","thay vào đó","thu hút","người qua đường","cảm thấy",
-"thực tế","tổ chức","biểu cảm","đúng đắn"
+"đạp xe","mùa xuân","bận rộn","nông thôn","trung bình","tốc độ","kỷ lục","giữ dáng",
+"khỏe mạnh","không khí trong lành","tuyến đường","thưởng thức","bằng phẳng",
+"không có xe cộ","ánh nắng","khá lạnh","khởi động","phanh","tệ hại","lý do",
+"thợ sửa máy","làng","thân thiện","phục vụ","nhàm chán","bóng bầu dục",
+"hành lang","mệt","gần như","vui vẻ","đơn giản","vui","năng động","rẻ","lựa chọn"
 ];
 
 let html="";
@@ -170,7 +169,7 @@ function submitQuiz(){
 }
 
 function save(c,s){
-    let data=JSON.parse(localStorage.getItem("pet3")||"[]");
+    let data=JSON.parse(localStorage.getItem("pet4")||"[]");
     data.push({
         name:name.value,
         class:class.value,
@@ -178,11 +177,11 @@ function save(c,s){
         s,
         time:new Date().toLocaleString()
     });
-    localStorage.setItem("pet3",JSON.stringify(data));
+    localStorage.setItem("pet4",JSON.stringify(data));
 }
 
 function load(){
-    let data=JSON.parse(localStorage.getItem("pet3")||"[]");
+    let data=JSON.parse(localStorage.getItem("pet4")||"[]");
     table.innerHTML=data.map((d,i)=>`
     <tr>
     <td>${i+1}</td>
@@ -196,7 +195,7 @@ function load(){
 }
 
 function clearData(){
-    localStorage.removeItem("pet3");
+    localStorage.removeItem("pet4");
     load();
 }
 </script>
